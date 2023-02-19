@@ -3,15 +3,14 @@
 // Free To Use To Manage The Shopping In Markets 
 // ---------------------------------------------------------------
 
-using System;
+using Xeptions;
 
-namespace Shopping.Core.Models.Products
+namespace Shopping.Core.Models.Products.Exceptions
 {
-    public class Product
+    public class InvalidProductException : Xeption
     {
-        public Guid Id { get; set; }
-        public string Title { get; set; }
-        public int Quantity { get; set; }
-        public decimal Price { get; set; }
+        public InvalidProductException()
+            : base(message: "Product is invalid. ")
+        { }
     }
 }

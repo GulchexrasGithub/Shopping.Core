@@ -5,13 +5,11 @@
 
 using System;
 
-namespace Shopping.Core.Models.Products
+namespace Shopping.Core.Brokers.Loggings
 {
-    public class Product
+    public interface ILoggingBroker
     {
-        public Guid Id { get; set; }
-        public string Title { get; set; }
-        public int Quantity { get; set; }
-        public decimal Price { get; set; }
+        void LogError(Exception exception);
+        void LogCritical(Exception exception);
     }
 }
