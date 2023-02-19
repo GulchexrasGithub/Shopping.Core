@@ -9,7 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Shopping.Core.Authorization;
 using Shopping.Core.Brokers.Storages;
+using Shopping.Core.Services.Foundations.Users;
 
 namespace Shopping.Core
 {
@@ -25,6 +27,8 @@ namespace Shopping.Core
 
             services.AddControllers();
             services.AddDbContext<StorageBroker>();
+            services.AddScoped<IJwtUtils, JwtUtils>();
+            services.AddScoped<IUserService, UserService>();
             services.AddSwaggerGen(config =>
             {
                 config.SwaggerDoc(
@@ -47,7 +51,7 @@ namespace Shopping.Core
 
             app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseAuthorization();
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseEndpoints(endpoints =>
                 endpoints.MapControllers());

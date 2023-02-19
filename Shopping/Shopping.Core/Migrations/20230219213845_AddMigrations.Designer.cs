@@ -12,7 +12,7 @@ using Shopping.Core.Brokers.Storages;
 namespace Shopping.Core.Migrations
 {
     [DbContext(typeof(StorageBroker))]
-    [Migration("20230219111847_AddMigrations")]
+    [Migration("20230219213845_AddMigrations")]
     partial class AddMigrations
     {
         /// <inheritdoc />
@@ -27,11 +27,9 @@ namespace Shopping.Core.Migrations
 
             modelBuilder.Entity("Shopping.Core.Models.ProductAudits.ProductAudit", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FieldName")
                         .HasColumnType("nvarchar(max)");
@@ -45,8 +43,8 @@ namespace Shopping.Core.Migrations
                     b.Property<string>("Operation")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("UpdateUserId")
                         .HasColumnType("uniqueidentifier");
@@ -56,16 +54,18 @@ namespace Shopping.Core.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UpdateUserId");
+
                     b.ToTable("ProductAudits");
                 });
 
             modelBuilder.Entity("Shopping.Core.Models.Products.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -105,6 +105,25 @@ namespace Shopping.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Shopping.Core.Models.ProductAudits.ProductAudit", b =>
+                {
+                    b.HasOne("Shopping.Core.Models.Products.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Shopping.Core.Models.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UpdateUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }
