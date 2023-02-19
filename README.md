@@ -1,2 +1,2 @@
 # Shopping.Core
-![image](https://user-images.githubusercontent.com/85836099/219941304-c09bd51f-fe60-4cdc-92d8-81c066ecef73.png)
+![image](https://user-images.githubusercontent.com/85836099/219941471-6240d43d-5a98-4cd1-9d30-5aa0c6766442.png)
