@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Shopping.Core.Brokers.Storages;
 
 namespace Shopping.Core
 {
@@ -23,6 +24,7 @@ namespace Shopping.Core
         {
 
             services.AddControllers();
+            services.AddDbContext<StorageBroker>();
             services.AddSwaggerGen(config =>
             {
                 config.SwaggerDoc(
