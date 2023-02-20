@@ -39,16 +39,16 @@ namespace Shopping.Core.Services.Foundations.Products
             Message = "Id is required"
         };
 
-        private static dynamic IsInvalid(int number) => new
-        {
-            Condition = number < 0,
-            Message = "Quantity is required"
-        };
-
         private static dynamic IsInvalid(string text) => new
         {
             Condition = string.IsNullOrWhiteSpace(text),
             Message = "Title is required"
+        };
+
+        private static dynamic IsInvalid(int number) => new
+        {
+            Condition = number < 0,
+            Message = "Quantity is required"
         };
 
         private static dynamic IsInvalid(decimal price) => new

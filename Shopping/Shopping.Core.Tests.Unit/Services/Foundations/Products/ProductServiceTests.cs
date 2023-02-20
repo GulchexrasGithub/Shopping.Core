@@ -4,6 +4,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Microsoft.Data.SqlClient;
@@ -36,11 +37,23 @@ namespace Shopping.Core.Tests.Unit.Services.Foundations.Products
         private static int GetRandomNumber() =>
            new IntRange(min: 1, max: 10).GetValue();
 
+        private static int GetRandomNegativeNumber() =>
+            -1 * new IntRange(min: 2, max: 10).GetValue();
+
+        private static IQueryable<Product> CreateRandomProducts()
+        {
+            return CreateProductFiller(GetRandomDateTimeOffset())
+                .Create(count: GetRandomNumber()).AsQueryable();
+        }
+
         private static string GetRandomMessage() =>
            new MnemonicString(wordCount: GetRandomNumber()).GetValue();
 
         private static Product CreateRandomProduct() =>
             CreateProductFiller(GetRandomDateTimeOffset()).Create();
+
+        private static Product CreateRandomProduct(DateTimeOffset date) =>
+            CreateProductFiller(date).Create();
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
@@ -51,6 +64,12 @@ namespace Shopping.Core.Tests.Unit.Services.Foundations.Products
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 
+        private static Product CreateRandomModifyProduct(DateTimeOffset date)
+        {
+            Product randomProduct = CreateRandomProduct(date);
+
+            return randomProduct;
+        }
 
         private static Filler<Product> CreateProductFiller(DateTimeOffset dates)
         {

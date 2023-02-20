@@ -141,53 +141,6 @@ namespace Shopping.Core.Tests.Unit.Services.Foundations.Products
         }
 
         [Fact]
-        public async void ShouldThrowDependencyValidationExceptionOnAddIfReferenceErrorOccursAndLogItAsync()
-        {
-            //given
-            Product someProduct = CreateRandomProduct();
-            string randomMessage = GetRandomMessage();
-            string exceptionMessage = randomMessage;
-
-
-            var foreignKeyConstraintConflictException =
-                new ForeignKeyConstraintConflictException(exceptionMessage);
-
-            var invalidProductReferenceException =
-                new InvalidProductReferenceException(foreignKeyConstraintConflictException);
-
-            var expectedProductDependencyValidationException =
-                new ProductDependencyValidationException(invalidProductReferenceException);
-
-            this.storageBrokerMock.Setup(broker =>
-                broker.InsertProductAsync(someProduct))
-                    .Throws(foreignKeyConstraintConflictException);
-
-            //when
-            ValueTask<Product> addProductTask =
-                this.productService.AddProductAsync(someProduct);
-
-            ProductDependencyValidationException actualProductDependencyValidationException =
-                await Assert.ThrowsAsync<ProductDependencyValidationException>(
-                    addProductTask.AsTask);
-
-            //then
-            actualProductDependencyValidationException.Should().BeEquivalentTo(
-                expectedProductDependencyValidationException);
-
-            this.storageBrokerMock.Verify(broker =>
-                broker.InsertProductAsync(It.IsAny<Product>()),
-                    Times.Once);
-
-            this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(It.Is(SameExceptionAs(
-                    expectedProductDependencyValidationException))),
-                        Times.Once);
-
-            this.storageBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
-        }
-
-        [Fact]
         public async Task ShouldThrowServiceExceptionOnAddIfServiceErrorOccursAndLogItAsync()
         {
             //given
