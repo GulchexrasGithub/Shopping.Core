@@ -12,7 +12,7 @@ using Shopping.Core.Models.Products;
 
 namespace Shopping.Core.Services.Foundations.Products
 {
-    public partial class ProductService
+    public partial class ProductService : IProductService
     {
         private readonly IStorageBroker storageBroker;
         private readonly ILoggingBroker loggingBroker;

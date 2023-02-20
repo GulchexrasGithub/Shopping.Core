@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Shopping.Core.Brokers.Loggings
 {
-    public class LoggingBroker
+    public class LoggingBroker : ILoggingBroker
     {
         private ILogger<LoggingBroker> logger;
 
