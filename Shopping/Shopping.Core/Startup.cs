@@ -3,15 +3,24 @@
 // Free To Use To Manage The Shopping In Markets 
 // ---------------------------------------------------------------
 
+using System;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Shopping.Core.Brokers.Loggings;
 using Shopping.Core.Brokers.Storages;
+using Shopping.Core.Brokers.Tokens;
+using Shopping.Core.Services.Foundations;
 using Shopping.Core.Services.Foundations.Products;
+using Shopping.Core.Services.Foundations.Users;
+using Shopping.Core.Services.Orchestrations;
+using Shopping.Core.Services.Processings;
 
 namespace Shopping.Core
 {
@@ -29,6 +38,9 @@ namespace Shopping.Core
             services.AddDbContext<StorageBroker>();
             RegisterBrokers(services);
             AddFoundationServices(services);
+            AddProcessingService(services);
+            AddOrchestrationService(services);
+            AddAuthenticationService(services);
 
             services.AddSwaggerGen(config =>
             {
@@ -51,8 +63,8 @@ namespace Shopping.Core
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseRouting();
-            app.UseAuthorization();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -63,11 +75,47 @@ namespace Shopping.Core
         {
             services.AddTransient<IStorageBroker, StorageBroker>();
             services.AddTransient<ILoggingBroker, LoggingBroker>();
+            services.AddScoped(typeof(TokenBroker));
         }
 
         private static void AddFoundationServices(IServiceCollection services)
         {
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddScoped(typeof(SecurityService));
+        }
+
+        private void AddOrchestrationService(IServiceCollection services)
+        {
+            services.AddTransient<IUserSecurityOrchestrationService, UserSecurityOrchestrationService>();
+        }
+
+        private void AddProcessingService(IServiceCollection services)
+        {
+            services.AddScoped(typeof(UserSecurityService));
+            services.AddScoped(typeof(UserProcessingService));
+        }
+
+        private void AddAuthenticationService(IServiceCollection services)
+        {
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    var jwtOptions = Configuration.GetSection("JWTOptionsModel").Get<JWTOptionsModel>();
+
+                    options
+                        .TokenValidationParameters = new TokenValidationParameters()
+                        {
+                            ValidateAudience = true,
+                            ValidateIssuer = true,
+                            ValidAudience = jwtOptions.Audience,
+                            ValidIssuer = jwtOptions.Issuer,
+                            IssuerSigningKey =
+                            new SymmetricSecurityKey(
+                                Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET_KEY")))
+                        };
+                });
         }
     }
 }

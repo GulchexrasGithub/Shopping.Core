@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using EFxceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Shopping.Core.Models.Users;
 
 namespace Shopping.Core.Brokers.Storages
 {
@@ -68,6 +69,11 @@ namespace Shopping.Core.Brokers.Storages
                 this.configuration.GetConnectionString(name: "DefaultConnection");
 
             optionsBuilder.UseSqlServer(connectionString);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            ConfigureUserEmail(modelBuilder.Entity<User>());
         }
     }
 }
