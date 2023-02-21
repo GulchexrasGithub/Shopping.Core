@@ -27,7 +27,9 @@ namespace Shopping.Core.Controllers
             try
             {
                 var user = userSecurityOrchestrationService.LoginUser(email, password);
-                return Ok(user);
+                if (user != null)
+                    return Ok(user);
+                else return BadRequest();
             }
             catch (InvalidCredentialException e)
             {

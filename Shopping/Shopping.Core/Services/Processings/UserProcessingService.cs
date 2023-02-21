@@ -9,7 +9,7 @@ using Shopping.Core.Services.Foundations.Users;
 
 namespace Shopping.Core.Services.Processings
 {
-    public class UserProcessingService
+    public class UserProcessingService : IUserProcessingService
     {
         private readonly IUserService userService;
 

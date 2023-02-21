@@ -4,11 +4,11 @@
 // ---------------------------------------------------------------
 
 using Shopping.Core.Models.Users;
-using Shopping.Core.Services.Foundations;
+using Shopping.Core.Services.Foundations.Users;
 
 namespace Shopping.Core.Services.Processings
 {
-    public class UserSecurityService
+    public class UserSecurityService : IUserSecurityService
     {
         private readonly SecurityService securityService;
 

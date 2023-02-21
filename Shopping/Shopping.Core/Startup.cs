@@ -16,7 +16,6 @@ using Microsoft.OpenApi.Models;
 using Shopping.Core.Brokers.Loggings;
 using Shopping.Core.Brokers.Storages;
 using Shopping.Core.Brokers.Tokens;
-using Shopping.Core.Services.Foundations;
 using Shopping.Core.Services.Foundations.Products;
 using Shopping.Core.Services.Foundations.Users;
 using Shopping.Core.Services.Orchestrations;
@@ -75,14 +74,14 @@ namespace Shopping.Core
         {
             services.AddTransient<IStorageBroker, StorageBroker>();
             services.AddTransient<ILoggingBroker, LoggingBroker>();
-            services.AddScoped(typeof(TokenBroker));
+            services.AddTransient<ITokenBroker, TokenBroker>();
         }
 
         private static void AddFoundationServices(IServiceCollection services)
         {
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IUserService, UserService>();
-            services.AddScoped(typeof(SecurityService));
+            services.AddTransient<ISecurityService, SecurityService>();
         }
 
         private void AddOrchestrationService(IServiceCollection services)
@@ -92,8 +91,8 @@ namespace Shopping.Core
 
         private void AddProcessingService(IServiceCollection services)
         {
-            services.AddScoped(typeof(UserSecurityService));
-            services.AddScoped(typeof(UserProcessingService));
+            services.AddTransient<IUserSecurityService, UserSecurityService>();
+            services.AddTransient<IUserProcessingService, UserProcessingService>();
         }
 
         private void AddAuthenticationService(IServiceCollection services)
