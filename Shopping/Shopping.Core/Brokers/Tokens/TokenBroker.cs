@@ -14,7 +14,7 @@ using Shopping.Core.Models.Users;
 
 namespace Shopping.Core.Brokers.Tokens
 {
-    public class TokenBroker
+    public class TokenBroker : ITokenBroker
     {
         private readonly IConfiguration configuration;
 

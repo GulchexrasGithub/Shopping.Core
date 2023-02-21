@@ -6,9 +6,9 @@
 using Shopping.Core.Brokers.Tokens;
 using Shopping.Core.Models.Users;
 
-namespace Shopping.Core.Services.Foundations
+namespace Shopping.Core.Services.Foundations.Users
 {
-    public class SecurityService
+    public class SecurityService : ISecurityService
     {
         private readonly TokenBroker tokenBroker;
 
